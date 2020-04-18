@@ -1,0 +1,38 @@
+aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  background: white;
+  border-right: 1px solid var(--color-light-grey);
+
+  div,
+  ul li a {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    line-height: 80px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--color-light-grey);
+  }
+  ul a {
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+  div {
+    justify-content: flex-end;
+  }
+  a.button {
+    border-radius: 50%;
+    background-color: var(--color-main);
+    color: white;
+    border: none;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    font-size: 30px;
+    text-align: center;
+  }
+}
