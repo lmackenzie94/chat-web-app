@@ -8,6 +8,7 @@ import { sequelize } from './database';
 import bodyParser from 'body-parser';
 import { messagesRouter } from './routes/messages';
 import { authRouter } from './routes/auth';
+import { middlewareAuth } from './middleware/auth';
 
 const run = async () => {
   // Created an INSTANCE of an API
@@ -38,10 +39,11 @@ const run = async () => {
   app.use(middlewareLogger);
 
   // Defining a NEW PIPE
-  app.use('/users', usersRouter);
   app.use('/auth', authRouter);
-  app.use('/conversations', conversationsRouter);
-  app.use('/messages', messagesRouter);
+  // picturing a pipe, middlewareAuth will run before the usersRouter
+  app.use('/users', middlewareAuth, usersRouter);
+  app.use('/conversations', middlewareAuth, conversationsRouter);
+  app.use('/messages', middlewareAuth, messagesRouter);
 
   // Running the web server on port 9999
   app.listen(9999);
