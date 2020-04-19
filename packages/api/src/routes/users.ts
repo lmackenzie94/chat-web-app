@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { User } from '../models/User';
+import bcrypt from 'bcryptjs';
 
 export const usersRouter = Router();
 
@@ -23,7 +24,19 @@ usersRouter.get('/:userID', async (req, res) => {
 // Create a user
 usersRouter.post('/', async (req, res, next) => {
   try {
-    const user = new User(req.body); // NOTE: THIS IS DANGEROUS
+    // separates 'password' as 'plain'
+    // renames the rest to 'userData'
+    const { password: plain, ...userData } = req.body;
+
+    // salt and hash the passwords in the database so they're not stored in plain text
+    // 10 is the number of times to encrypt
+    const salt = bcrypt.genSaltSync(10);
+    const password = bcrypt.hashSync(plain, salt);
+
+    const user = new User({
+      ...userData,
+      password,
+    }); // NOTE: THIS IS DANGEROUS
     await user.save();
     res.json(user);
   } catch (e) {
@@ -36,7 +49,7 @@ usersRouter.patch('/:userID', async (req, res, next) => {
   try {
     await User.update(req.body, {
       where: { id: req.params.userID },
-      returning: true // TODO: Fix this
+      returning: true, // TODO: Fix this
     });
     const user = await User.findByPk(req.params.userID);
     res.json(user);
@@ -49,10 +62,10 @@ usersRouter.patch('/:userID', async (req, res, next) => {
 usersRouter.delete('/:userID', async (req, res, next) => {
   try {
     User.destroy({
-      where: { id: req.params.userID }
+      where: { id: req.params.userID },
     });
     res.json({
-      message: 'Successfully deleted user'
+      message: 'Successfully deleted user',
     });
   } catch (e) {
     next(e);
