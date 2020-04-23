@@ -18,16 +18,16 @@ export const middlewareAuth: RequestHandler = (req, res, next) => {
   const reg = /^Bearer\s(.*)$/;
   // Regex to check it's in the right format
   if (!/^Bearer\s.*$/.test(bearer)) {
-    console.log(bearer);
     return throwError('Incorrect JWT format');
   }
 
   const token = reg.exec(bearer)![1];
   try {
-    jwt.verify(token, JWT_SECRET);
+    res.locals.user = jwt.verify(token, JWT_SECRET);
   } catch (e) {
     return throwError('Invalid JWT');
   }
+  jwt.decode(token);
 
   next();
 };

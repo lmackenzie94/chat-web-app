@@ -5,9 +5,15 @@ export interface Conversation {
   id: string;
 }
 
-
 export interface Message {
   /** This is the message content */
   content: string;
   id: string;
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  emailName: string;
 }

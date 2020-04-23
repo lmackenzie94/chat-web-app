@@ -9,6 +9,7 @@ import bodyParser from 'body-parser';
 import { messagesRouter } from './routes/messages';
 import { authRouter } from './routes/auth';
 import { middlewareAuth } from './middleware/auth';
+import { meRouter } from './routes/me';
 
 const run = async () => {
   // Created an INSTANCE of an API
@@ -42,6 +43,7 @@ const run = async () => {
   app.use('/auth', authRouter);
   // picturing a pipe, middlewareAuth will run before the usersRouter
   app.use('/users', middlewareAuth, usersRouter);
+  app.use('/me', middlewareAuth, meRouter);
   app.use('/conversations', middlewareAuth, conversationsRouter);
   app.use('/messages', middlewareAuth, messagesRouter);
 
